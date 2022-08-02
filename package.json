@@ -1,0 +1,14 @@
+{
+  "name": "com-outsystems-AlviereCaptureCheck",
+  "version": "1.0.0",
+  "description": "",
+  "cordova": {
+    "id": "com-outsystems-AlviereCaptureCheck",
+    "platforms": []
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="com-outsystems-AlviereCaptureCheck" version="1.0.0"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>Alviere Capture Check</name>
+
+    <js-module name="AlviereCaptureCheck" src="www/AlviereCaptureCheck.js">
+        <clobbers target="AlviereCaptureCheck" />
+    </js-module>
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="AlviereCaptureCheck">
+                <param name="ios-package" value="AlviereCaptureCheck" />
+            </feature>
+        </config-file>
+
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="Payments"/>
+                <pod name="AccountsSDK"/>
+            </pods>
+        </podspec>
+        <source-file src="src/ios/AlviereCaptureCheck.swift" />
+
+        <preference name="CAMERA_USAGE_DESCRIPTION" default=" " />
+        <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+            <string>$CAMERA_USAGE_DESCRIPTION</string>
+        </config-file>
+
+        <hook type="before_plugin_install" src="hooks/ios/add_swift_support.js" />
+
+    </platform>
+
+    <platform name="android">
+
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="AlviereCaptureCheck">
+                <param name="android-package" value="com.outsystems.alvierecapturecheck.AlviereCaptureCheck" />
+            </feature>
+        </config-file>
+
+        <hook type="after_plugin_install" src="hooks/android/ReplaceAppid.js" />
+        <hook type="after_plugin_install" src="hooks/android/MainAppAdder.js" />
+
+        <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+
+        <source-file src="src/android/AlviereCaptureCheck.java" target-dir="src/com/outsystems/alvierecapturecheck" />
+
+        <framework src="src/android/dependencies.gradle" custom="true" type="gradleReference" />
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.CAPTURE_SECURE_VIDEO_OUTPUT" />
+            <uses-permission android:name="android.permission.CAPTURE_VIDEO_OUTPUT" />
+        </config-file>
+
+    </platform>
+
+</plugin>

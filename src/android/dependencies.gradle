@@ -1,0 +1,4 @@
+
+dependencies {
+    implementation 'com.alviere.android:payments:0.9.16'
+}
