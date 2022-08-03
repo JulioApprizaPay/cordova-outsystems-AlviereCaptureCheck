@@ -1,5 +1,5 @@
 //
-//  BeneficiaryDelegate.swift
+//  AlviereCaptureCheck.swift
 //  HelloCordova
 //
 //  Created by Luis Bouça on 31/05/2022.
@@ -8,34 +8,28 @@
 import Foundation
 import AlCore
 import Payments
+import AccountsSDK
 
-@objc(AlviereCaptureCheck) class AlviereCaptureCheck: CDVPlugin,CheckDepositsDelegate,CheckDepositsCaptureDelegate {
-    
-    var callbackId:String!
+@objc(AlviereCaptureCheck) class AlviereCaptureCheck: CDVPlugin{
+    var callbackId: String!
+    var delegate:CaptureCheckDelegate!
 
-    func init(){
+    override func pluginInitialize() {
         if !AlCoreSDK.shared.setEnvironment(.sandbox) {
             print("Error initializing SDK.")
         }
-        return true
+        delegate = CaptureCheckDelegate()
+        return
     }
 
-    @objc(captureCheck)func captureCheck(command:CDVInvokedUrlCommand){
-        callbackId = command.callbackId;
+    @objc(setCallbacks:)func setCallbacks(command: CDVInvokedUrlCommand) {
+        delegate.setCallbacks(callbackid: command.callbackId,command: commandDelegate)
     }
 
-    @objc(captureCheck)func captureCheck(command:CDVInvokedUrlCommand){
-        let viewController = AlAccounts.shared.createCaptureCheckDepositViewController(delegate: self, style: style)
-        self.navigationController?.show(viewController, sender: self)
-    }
-    func didHandleEvent(_ event: String, metadata: [String : String]?) {
-        self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.error,messageAs:event), callbackId: callbackId)
+    @objc(captureCheck:)func captureCheck(command: CDVInvokedUrlCommand) {
+        let viewController = AlPayments.shared.createCaptureCheckDepositViewController(delegate: delegate, style: DepositCheckStyle.getDefaultStyle())
         
-        print("Received event: \(event)\nmetadata: \(metadata ?? [:])")
-    }
-    func didCaptureCheck(frontImage: String, backImage: String) {
-        var images:[String] = [frontImage,backImage]
-        self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.ok,messageAs:images), callbackId: callbackId)
-        print("Images Captured!")
+        self.viewController.present(viewController, animated: false)
+        //self.viewController.navigationController?.show(viewController, sender: self)
     }
 }

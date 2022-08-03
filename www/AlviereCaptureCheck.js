@@ -10,3 +10,7 @@ exports.requestPermission = function (success, error) {
 exports.checkPermission = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'checkPermission', []);
 };
+
+exports.setCallbacks = function (success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'setCallbacks', []);
+};
