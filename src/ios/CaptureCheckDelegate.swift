@@ -21,12 +21,18 @@ class CaptureCheckDelegate: NSObject, CheckDepositsDelegate, CheckDepositsCaptur
 
 
     func didHandleEvent(_ event: String, metadata: [String: String]?) {
+        if command == nil {
+            return;
+        }
         command.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: event), callbackId: callbackId)
 
         print("Received event: \(event)\nmetadata: \(metadata ?? [:])")
     }
 
     func didCaptureCheck(frontImage: String, backImage: String) {
+        if command == nil {
+            return;
+        }
         let images: [String] = [frontImage, backImage]
         command.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: images), callbackId: callbackId)
         print("Images Captured!")

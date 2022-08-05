@@ -53,7 +53,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
         }else if (action.equals("captureCheck")) {
 
             if(captureCallback == null){
-                callback.error("Insert the callback block in your UI!");
+                callback.error("Callbacks were not set!");
                 return false;
             }
             if(isAwaitingResponse){
