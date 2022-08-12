@@ -1,36 +1,23 @@
 package com.outsystems.alvierecapturecheck;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
 import android.Manifest;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 
-import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Base64;
-
 import com.alviere.android.payments.PaymentsSdk;
+import com.alviere.android.payments.sdk.callback.CheckCaptureSdkCallback;
+import com.alviere.android.payments.sdk.model.client.response.CheckCaptureDetailsModel;
 
 import java.util.Map;
 
@@ -43,6 +30,11 @@ public class AlviereCaptureCheck extends CordovaPlugin {
     private CallbackContext captureCallback;
     private static Boolean isAwaitingResponse = false;
 
+    @Override
+    protected void pluginInitialize() {
+        super.pluginInitialize();
+        PaymentsSdk.INSTANCE.init();
+    }
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -50,6 +42,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
         callback = callbackContext;
         if (action.equals("setCallbacks")){
             captureCallback = callbackContext;
+            return true;
         }else if (action.equals("captureCheck")) {
 
             if(captureCallback == null){
@@ -61,6 +54,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
                 return false;
             }
             isAwaitingResponse = true;
+
             CheckCaptureSdkCallback checkCaptureSdkCallback = new CheckCaptureSdkCallback() {
                 @Override
                 public void onSuccess(@NonNull CheckCaptureDetailsModel checkCapture) {

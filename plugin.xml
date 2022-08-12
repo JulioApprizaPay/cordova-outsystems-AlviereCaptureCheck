@@ -34,6 +34,13 @@
             <string>$CAMERA_USAGE_DESCRIPTION</string>
         </config-file>
 
+        <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+            <dict>
+                <key>Item 0</key>
+                <string>cydia</string>
+            </dict>
+		</config-file>
+
         <hook type="after_prepare" src="hooks/ios/changeInLineMediaPlayback.js" />
         <hook type="before_plugin_install" src="hooks/ios/add_swift_support.js" />
         <hook type="after_plugin_install" src="hooks/ios/changeAppDelegate.js" />
@@ -50,6 +57,7 @@
 
         <hook type="after_plugin_install" src="hooks/android/ReplaceAppid.js" />
         <hook type="after_plugin_install" src="hooks/android/MainAppAdder.js" />
+        <!--hook type="after_prepare" src="hooks/android/checkAndUpgradeCompileVersion.js" /-->
 
         <config-file parent="/*" target="AndroidManifest.xml"></config-file>
 

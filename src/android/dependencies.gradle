@@ -1,4 +1,11 @@
 
 dependencies {
-    implementation 'com.alviere.android:payments:0.9.16'
+    implementation 'com.alviere.android:payments:0.9.17'
+}
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.appcompat:appcompat:1.6.0-alpha04'
+        //androidx.core:core-ktx:1.9.0-alpha05
+        force 'androidx.core:core-ktx:1.8.0'
+    }
 }
