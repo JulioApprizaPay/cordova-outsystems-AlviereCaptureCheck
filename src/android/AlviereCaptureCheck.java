@@ -15,10 +15,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.alviere.android.accounts.AccountsSdk;
+import com.alviere.android.accounts.sdk.callback.DocumentCaptureSdkCallback;
+import com.alviere.android.accounts.sdk.model.client.response.DocumentCaptureDetailsModel;
+import com.alviere.android.accounts.sdk.model.common.DocumentTypeModel;
+
 import com.alviere.android.payments.PaymentsSdk;
 import com.alviere.android.payments.sdk.callback.CheckCaptureSdkCallback;
 import com.alviere.android.payments.sdk.model.client.response.CheckCaptureDetailsModel;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,25 +33,30 @@ import java.util.Map;
 public class AlviereCaptureCheck extends CordovaPlugin {
 
     private CallbackContext callback;
-    private CallbackContext captureCallback;
+    private CallbackContext captureCheckCallback;
+    private CallbackContext captureDosierCallback;
     private static Boolean isAwaitingResponse = false;
 
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
         PaymentsSdk.INSTANCE.init();
+        AccountsSdk.INSTANCE.init();
     }
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         
         callback = callbackContext;
-        if (action.equals("setCallbacks")){
-            captureCallback = callbackContext;
+        if (action.equals("setCheckCallbacks")){
+            captureCheckCallback = callbackContext;
+            return true;
+        }else if (action.equals("setDosierCallbacks")){
+            captureDosierCallback = callbackContext;
             return true;
         }else if (action.equals("captureCheck")) {
 
-            if(captureCallback == null){
+            if(captureCheckCallback == null){
                 callback.error("Callbacks were not set!");
                 return false;
             }
@@ -63,7 +74,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
                     images.put(checkCapture.getEncodedBack());
                     PluginResult result = new PluginResult(PluginResult.Status.OK,images);
                     result.setKeepCallback(true);
-                    captureCallback.sendPluginResult(result);
+                    captureCheckCallback.sendPluginResult(result);
                     isAwaitingResponse = false;
                 }
 
@@ -71,13 +82,67 @@ public class AlviereCaptureCheck extends CordovaPlugin {
                 public void onEvent(@NonNull String event, @Nullable Map<String, String> metadata) {
                     PluginResult result = new PluginResult(PluginResult.Status.ERROR,event);
                     result.setKeepCallback(true);
-                    captureCallback.sendPluginResult(result);
+                    captureCheckCallback.sendPluginResult(result);
                     isAwaitingResponse = false;
                 }
             };
             PaymentsSdk.INSTANCE.setEventListener(checkCaptureSdkCallback);
             Intent intent = PaymentsSdk.INSTANCE.checkCaptureByIntent(cordova.getActivity());
             isAwaitingResponse = true;
+            cordova.getActivity().startActivity(intent);
+            return true;
+        }else if(action.equals("captureDosier")){
+
+            if(captureDosierCallback == null){
+                callback.error("Callbacks were not set!");
+                return false;
+            }
+            if(isAwaitingResponse){
+                callbackContext.error("Awaiting Capture Response!");
+                return false;
+            }
+            String docsJSON = args.getString(0);
+            JSONArray docs = new JSONArray(docsJSON);
+            if (docs == null || docs.length() == 0){
+                callbackContext.error("Documents not specified!");
+            }
+            isAwaitingResponse = true;
+
+            DocumentCaptureSdkCallback documentCaptureSdkCallback = new DocumentCaptureSdkCallback() {
+                @Override
+                public void onSuccess(@NonNull List<DocumentCaptureDetailsModel> dosierCaptures) {
+                    JSONArray images = new JSONArray();
+                    for (DocumentCaptureDetailsModel dosierCapture:dosierCaptures) {
+                        JSONObject doc = new JSONObject();
+                        try {
+                            doc.put("image",dosierCapture.getEncodedImage());
+                            doc.put("type",dosierCapture.getType());
+                            images.put(doc);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    PluginResult result = new PluginResult(PluginResult.Status.OK,images);
+                    result.setKeepCallback(true);
+                    captureDosierCallback.sendPluginResult(result);
+                    isAwaitingResponse = false;
+                }
+
+                @Override
+                public void onEvent(@NonNull String event, @Nullable Map<String, String> metadata) {
+                    PluginResult result = new PluginResult(PluginResult.Status.ERROR,event);
+                    result.setKeepCallback(true);
+                    captureDosierCallback.sendPluginResult(result);
+                    isAwaitingResponse = false;
+                }
+            };
+
+            AccountsSdk.INSTANCE.setEventListener(documentCaptureSdkCallback);
+            DocumentTypeModel[] filesToCapture = new DocumentTypeModel[docs.length()];
+            for (int i = 0; i < docs.length(); i++) {
+                filesToCapture[i] = DocumentTypeModel.valueOf(docs.getString(i));
+            }
+            Intent intent =  AccountsSdk.INSTANCE.documentCaptureByIntent(cordova.getActivity(),filesToCapture);
             cordova.getActivity().startActivity(intent);
             return true;
         }else if (action.equals("checkPermission")) {

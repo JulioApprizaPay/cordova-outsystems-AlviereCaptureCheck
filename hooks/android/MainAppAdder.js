@@ -4,8 +4,8 @@ var path = require('path');
 const constants={
     javaSrcPath : path.join("platforms","android","app","src","main","java"),
     kotlinSrcPath : path.join("platforms","android","app","src","main","kotlin"),
-    pluginPackage : path.join("com","outsystems","misnap"),
-    pluginID : "com-outsystems-MiSnap",
+    pluginPackage : path.join("com","outsystems","alvierecapturecheck"),
+    pluginID : "com-outsystems-AlviereCaptureCheck",
     pluginSrc : path.join("src","android")
 }
 
@@ -49,7 +49,8 @@ module.exports = function (context) {
             var currentImports;
             while(currentImports = importsToAdd.exec(content)){
                 var current = currentImports[1];
-                toAlterContent = toAlterContent.replace("import android.os.Bundle;","import android.os.Bundle;\n"+current+"\n")
+                current = current.replace("com.luisbouca.test",appId)
+                toAlterContent = toAlterContent.replace("import android.os.Bundle;","import android.os.Bundle;\n"+current)
             }
 
             var currentFunctions;

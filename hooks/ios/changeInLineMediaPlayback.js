@@ -3,7 +3,7 @@ var path = require('path');
 
 const constants={
     cordovaSrcPath : path.join("platforms","ios","CordovaLib","Classes"),
-    pluginID : path.join("com","outsystems","misnap")
+    pluginID : path.join("com","outsystems","alvierecapturecheck")
 }
 
 module.exports = function (context) {

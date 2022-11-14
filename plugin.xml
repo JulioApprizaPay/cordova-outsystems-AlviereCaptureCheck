@@ -20,8 +20,8 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Payments"/>
-                <pod name="AccountsSDK"/>
+                <pod name="Payments" spec="~> 0.9.16.0"/>
+                <pod name="AccountsSDK" spec="~> 0.9.16.0"/>
             </pods>
         </podspec>
         
@@ -57,7 +57,6 @@
 
         <hook type="after_plugin_install" src="hooks/android/ReplaceAppid.js" />
         <hook type="after_plugin_install" src="hooks/android/MainAppAdder.js" />
-        <!--hook type="after_prepare" src="hooks/android/checkAndUpgradeCompileVersion.js" /-->
 
         <config-file parent="/*" target="AndroidManifest.xml"></config-file>
 

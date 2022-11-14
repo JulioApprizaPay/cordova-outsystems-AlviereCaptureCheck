@@ -4,6 +4,10 @@ exports.captureCheck = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'captureCheck', []);
 };
 
+exports.captureDosier = function (docList,success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'captureDosier', [docList]);
+};
+
 exports.requestPermission = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'requestPermission', []);
 };
@@ -11,6 +15,10 @@ exports.checkPermission = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'checkPermission', []);
 };
 
-exports.setCallbacks = function (success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'setCallbacks', []);
+exports.setCheckCallbacks = function (success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'setCheckCallbacks', []);
 };
+
+exports.setDosierCallbacks = function (success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'setDosierCallbacks', []);
+}
