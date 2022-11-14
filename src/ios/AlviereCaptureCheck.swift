@@ -10,6 +10,7 @@ import AlCore
 import Payments
 import AccountsSDK
 import AVFoundation
+import UIKit
 
 @objc(AlviereCaptureCheck) class AlviereCaptureCheck: CDVPlugin{
     var callbackId: String!
@@ -23,8 +24,31 @@ import AVFoundation
         return
     }
 
-    @objc(setCallbacks:)func setCallbacks(command: CDVInvokedUrlCommand) {
-        delegate.setCallbacks(callbackid: command.callbackId,command: commandDelegate)
+    @objc(setCheckCallbacks:)func setCheckCallbacks(command: CDVInvokedUrlCommand) {
+        delegate.setCheckCallbacks(callbackid: command.callbackId,command: commandDelegate)
+    }
+
+    @objc(setDosierCallbacks:)func setDosierCallbacks(command: CDVInvokedUrlCommand) {
+        delegate.setDosierCallbacks(callbackid: command.callbackId,command: commandDelegate)
+    }
+
+    @objc(captureDosier:)func captureDosier(command: CDVInvokedUrlCommand) {
+        let docsJSON = command.argument(at:0) as! String;
+        let docsString = try JSONSerialization.jsonObject(with: docsJSON.data(using: .utf8, allowLossyConversion: false)!, options: .mutableContainers) as! Array<String>
+        if(docsString == nil || docsString.count == 0){
+            commandDelegate.send(CDVPluginResult(status: .error, messageAs: "documents have not been specified!"), callbackId: command.callbackId)
+            return;
+        }
+        
+        var docs = Array<Document>()
+        
+        for doc in docsString {
+            docs.append(Document(typeString:doc))
+        }
+        
+        let viewController = AlAccounts.shared.createAccountDossierViewController(data: docs,delegate: delegate, style: AccountDossierStyle.getDefaultStyle())
+        
+        self.viewController.navigationController?.show(viewController, sender: self)
     }
 
     @objc(captureCheck:)func captureCheck(command: CDVInvokedUrlCommand) {
