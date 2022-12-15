@@ -4,8 +4,8 @@ exports.captureCheck = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'captureCheck', []);
 };
 
-exports.captureDosier = function (docList,success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'captureDosier', [docList]);
+exports.captureDosier = function (docList,token,success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'captureDosier', [docList,token]);
 };
 
 exports.requestPermission = function (success, error) {

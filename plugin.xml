@@ -20,8 +20,8 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Payments" spec="~> 0.9.16.0"/>
-                <pod name="AccountsSDK" spec="~> 0.9.16.0"/>
+                <pod name="Payments" spec="~> 0.9.19.0"/>
+                <pod name="AccountsSDK" spec="~> 0.9.19.0"/>
             </pods>
         </podspec>
         
