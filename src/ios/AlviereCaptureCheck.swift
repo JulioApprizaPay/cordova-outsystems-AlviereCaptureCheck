@@ -34,7 +34,6 @@ import UIKit
 
     @objc(captureDosier:)func captureDosier(command: CDVInvokedUrlCommand) {
         let docsJSON = command.argument(at:0) as! String;
-        let token = command.argument(at:1) as! String;
         let docsString = try? JSONSerialization.jsonObject(with: docsJSON.data(using: .utf8, allowLossyConversion: false)!, options: .mutableContainers) as? Array<String>
         if(docsString == nil || docsString!.count == 0){
             commandDelegate.send(CDVPluginResult(status: .error, messageAs: "documents have not been specified!"), callbackId: command.callbackId)
@@ -47,10 +46,7 @@ import UIKit
             docs.append(Document(typeString:doc))
         }
         
-        let data = AccountDossierData(externalId: "", documents: docs, accountId: "", dossierId:nil, isPrimary: false, intent: .create)
-        
-        let viewController = AlAccounts.shared.createAccountDossierViewController(token: token, data: data, delegate: delegate)
-        //let viewController = AlAccounts.shared.createAccountDossierViewController(data: docs,delegate: delegate, style: AccountDossierStyle.getDefaultStyle())
+        let viewController = AlAccounts.shared.createCaptureAccountDossierViewController(data: docs,delegate: delegate, style: AccountDossierStyle.getDefaultStyle())
         
         self.viewController.navigationController?.show(viewController, sender: self)
     }
