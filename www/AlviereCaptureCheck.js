@@ -22,3 +22,7 @@ exports.setCheckCallbacks = function (success, error) {
 exports.setDosierCallbacks = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'setDosierCallbacks', []);
 }
+
+exports.hideNavigationBar = function (success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'hideNavigationBar', []);
+}

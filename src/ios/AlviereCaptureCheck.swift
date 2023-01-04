@@ -14,22 +14,31 @@ import UIKit
 
 @objc(AlviereCaptureCheck) class AlviereCaptureCheck: CDVPlugin{
     var callbackId: String!
-    var delegate:CaptureCheckDelegate!
+    var checkDelegate:CaptureCheckDelegate!
+    var dosierDelegate:CaptureDosierDelegate!
 
     override func pluginInitialize() {
         if !AlCoreSDK.shared.setEnvironment(.sandbox) {
             print("Error initializing SDK.")
         }
-        delegate = CaptureCheckDelegate()
+        checkDelegate = CaptureCheckDelegate()
+        dosierDelegate = CaptureDosierDelegate()
         return
+    }
+    
+    @objc(hideNavigationBar:)func hideNavigationBar(command: CDVInvokedUrlCommand){
+        if (self.viewController.navigationController != nil){
+            self.viewController.navigationController!.isNavigationBarHidden = true
+        }
+        self.commandDelegate.send(CDVPluginResult(status:.ok), callbackId: command.callbackId);
     }
 
     @objc(setCheckCallbacks:)func setCheckCallbacks(command: CDVInvokedUrlCommand) {
-        delegate.setCheckCallbacks(callbackid: command.callbackId,command: commandDelegate)
+        checkDelegate.setCheckCallbacks(callbackid: command.callbackId,command: commandDelegate)
     }
 
     @objc(setDosierCallbacks:)func setDosierCallbacks(command: CDVInvokedUrlCommand) {
-        delegate.setDosierCallbacks(callbackid: command.callbackId,command: commandDelegate)
+        dosierDelegate.setDosierCallbacks(callbackid: command.callbackId,command: commandDelegate)
     }
 
     @objc(captureDosier:)func captureDosier(command: CDVInvokedUrlCommand) {
@@ -46,13 +55,13 @@ import UIKit
             docs.append(Document(typeString:doc))
         }
         
-        let viewController = AlAccounts.shared.createCaptureAccountDossierViewController(data: docs,delegate: delegate, style: AccountDossierStyle.getDefaultStyle())
+        let viewController = AlAccounts.shared.createCaptureAccountDossierViewController(data: docs,delegate: dosierDelegate, style: AccountDossierStyle.getDefaultStyle())
         
         self.viewController.navigationController?.show(viewController, sender: self)
     }
 
     @objc(captureCheck:)func captureCheck(command: CDVInvokedUrlCommand) {
-        let viewController = AlPayments.shared.createCaptureCheckDepositViewController(delegate: delegate, style: DepositCheckStyle.getDefaultStyle())
+        let viewController = AlPayments.shared.createCaptureCheckDepositViewController(delegate: checkDelegate, style: DepositCheckStyle.getDefaultStyle())
         
         self.viewController.navigationController?.show(viewController, sender: self)
     }

@@ -25,6 +25,7 @@
             </pods>
         </podspec>
         
+        <source-file src="src/ios/CaptureDosierDelegate.swift" />
         <source-file src="src/ios/CaptureCheckDelegate.swift" />
         <source-file src="src/ios/AlviereCaptureCheck.swift" />
         <source-file src="src/ios/AppDelegateReplace.txt" />
