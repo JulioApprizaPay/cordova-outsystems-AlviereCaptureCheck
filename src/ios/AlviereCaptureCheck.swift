@@ -100,10 +100,10 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     func checkPermission(command: CDVInvokedUrlCommand) {
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) ==  AVAuthorizationStatus.authorized {
             // Already Authorized
-            sendPluginResult(status: CDVCommandStatus_OK, message: "ok", callbackType: .check)
+            sendPluginResult(status: CDVCommandStatus_OK, message: "ok", callbackType: .other, callbackID: command.callbackId)
             //commandDelegate.send(CDVPluginResult(status: .ok, messageAs: true), callbackId: command.callbackId)
         } else {
-            sendPluginResult(status: CDVCommandStatus_ERROR, message: "false", callbackType: .check)
+            sendPluginResult(status: CDVCommandStatus_ERROR, message: "false", callbackType: .other, callbackID: command.callbackId)
             //commandDelegate.send(CDVPluginResult(status: .ok, messageAs: false), callbackId: command.callbackId)
         }
     }
@@ -112,13 +112,16 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     func requestPermission(command: CDVInvokedUrlCommand) {
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) ==  AVAuthorizationStatus.authorized {
             // Already Authorized
-            commandDelegate.send(CDVPluginResult(status: .ok, messageAs: true), callbackId: command.callbackId)
+            sendPluginResult(status: CDVCommandStatus_OK, message: "ok", callbackType: .other, callbackID: command.callbackId)
+            //commandDelegate.send(CDVPluginResult(status: .ok, messageAs: true), callbackId: command.callbackId)
         } else {
             AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { (granted: Bool) -> Void in
                if granted == true {
-                   self.commandDelegate.send(CDVPluginResult(status: .ok, messageAs: true), callbackId: command.callbackId)
+                   self.sendPluginResult(status: CDVCommandStatus_OK, message: "ok", callbackType: .other, callbackID: command.callbackId)
+//                   self.commandDelegate.send(CDVPluginResult(status: .ok, messageAs: true), callbackId: command.callbackId)
                } else {
-                   self.commandDelegate.send(CDVPluginResult(status: .ok, messageAs: false), callbackId: command.callbackId)
+                   self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "false", callbackType: .other, callbackID: command.callbackId)
+//                   self.commandDelegate.send(CDVPluginResult(status: .ok, messageAs: false), callbackId: command.callbackId)
                }
            })
         }
@@ -182,16 +185,16 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
         }
     }
     
-    func sendPluginResult(status: CDVCommandStatus, message: String, callbackType: CallbackType) {
+    func sendPluginResult(status: CDVCommandStatus, message: String, callbackType: CallbackType, callbackID: String = "" ) {
         var pluginResult = CDVPluginResult(status: status, messageAs: message)
         if callbackType == .dossier {
             if (pluginCallback.dossierCallbackID) != nil {
                 self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.dossierCallbackID)
             }
-        } else {
-            if (pluginCallback.checkCallbackID) != nil {
+        } else if (pluginCallback.checkCallbackID) != nil {
                 self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.checkCallbackID)
-            }
+        } else if (callbackType == .other) {
+            self.commandDelegate!.send(pluginResult, callbackId: callbackID)
         }
     }
 }
@@ -209,5 +212,6 @@ class PluginCallback {
 enum CallbackType {
     case check
     case dossier
+    case other
 }
 
