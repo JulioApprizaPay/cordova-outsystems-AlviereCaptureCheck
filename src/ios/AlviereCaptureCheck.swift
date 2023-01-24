@@ -19,6 +19,7 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     
     override func pluginInitialize() {
         pluginCallback = PluginCallback()
+        print("⭐️ \(pluginCallback)")
     }
         
     @objc(hideNavigationBar:)
@@ -44,8 +45,23 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
 
     @objc(captureDossier:)
     func captureDossier(command: CDVInvokedUrlCommand) {
-        let docsJSON = command.argument(at:0) as! String;
-        let docsString = try? JSONSerialization.jsonObject(with: docsJSON.data(using: .utf8, allowLossyConversion: false)!, options: .mutableContainers) as? Array<String>
+//        print("⭐️ \(command.arguments)")
+//        for argument in command.arguments {
+//            print("⭐️ \(argument)")
+//        }
+
+        var documents: Array<String> = []
+        let arguments = command.arguments[0] as! Array<String>
+        for argument in arguments {
+            documents.append(argument)
+        }
+        let jsonData = try! JSONEncoder().encode(documents)
+        let docsJSON = String(data: jsonData, encoding: .utf8)
+        
+//        let docsJSON = "[\"DRIVER_LICENSE_FRONT\", \"DRIVER_LICENSE_BACK\", \"SELFIE\"]"
+//        let docsJSON = command.argument(at:0) as! String;
+//        let docsJSON = command.arguments[0] as! String;
+        let docsString = try? JSONSerialization.jsonObject(with: docsJSON!.data(using: .utf8, allowLossyConversion: false)!, options: .mutableContainers) as? Array<String>
         if(docsString == nil || docsString!.count == 0){
             sendPluginResult(status: CDVCommandStatus_ERROR, message: "Documents have not been specified!", callbackType: .dossier)
             //commandDelegate.send(CDVPluginResult(status: .error, messageAs: "Documents have not been specified!"), callbackId: command.callbackId)
@@ -119,13 +135,13 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     }
     
 //    //MARK: AccountDossiersCaptureDelegate
-//    func setDosierCallbacks(callbackid: String,command: CDVCommandDelegate) {
-//        print("⭐️ setDosierCallbacks")
+    func setDossierCallbacks(callbackid: String,command: CDVCommandDelegate) {
+        print("⭐️ setDosierCallbacks")
 //        pluginCallback.resetCallbacks()
-//        pluginCallback.dossierCommand = command
-////        self.dosierCallbackId = callbackid
-////        self.command = command
-//    }
+//        pluginCallback.dossierCallbackID = command
+//        self.dosierCallbackId = callbackid
+//        self.command = command
+    }
     
     func didCaptureDocuments(_ documents: [Document]) {
         print("⭐️ Images Captured!")
