@@ -15,7 +15,11 @@ import UIKit
 @objc(AlviereCaptureCheck)
 class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepositsCaptureDelegate {
     var closeAction: (() -> Void)?
-    fileprivate var pluginCallback = PluginCallback()
+    var pluginCallback = PluginCallback()
+    
+    override func pluginInitialize() {
+        pluginCallback = PluginCallback()
+    }
         
     @objc(hideNavigationBar:)
     func hideNavigationBar(command: CDVInvokedUrlCommand){
@@ -28,13 +32,14 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     @objc(setCheckCallbacks:)
     func setCheckCallbacks(command: CDVInvokedUrlCommand) {
         pluginCallback.resetCallbacks()
-        pluginCallback.checkCommand = command
+        pluginCallback.checkCallbackID = command.callbackId
     }
 
     @objc(setDossierCallbacks:)
     func setDossierCallbacks(command: CDVInvokedUrlCommand) {
+        
         pluginCallback.resetCallbacks()
-        pluginCallback.dossierCommand = command
+        pluginCallback.dossierCallbackID = command.callbackId
     }
 
     @objc(captureDossier:)
@@ -106,9 +111,9 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     func didHandleEvent(_ event: String, metadata: [String: String]?) {
         print("⭐️ Received event: \(event)\nmetadata: \(metadata ?? [:])")
 //            command.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: event), callbackId: dosierCallbackId)
-        if pluginCallback.checkCommand != nil {
+        if pluginCallback.checkCallbackID != nil {
             sendPluginResult(status: CDVCommandStatus_ERROR, message: event, callbackType: .check)
-        } else if pluginCallback.dossierCommand != nil {
+        } else if pluginCallback.dossierCallbackID != nil {
             sendPluginResult(status: CDVCommandStatus_ERROR, message: event, callbackType: .dossier)
         }
     }
@@ -164,24 +169,24 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     func sendPluginResult(status: CDVCommandStatus, message: String, callbackType: CallbackType) {
         var pluginResult = CDVPluginResult(status: status, messageAs: message)
         if callbackType == .dossier {
-            if (pluginCallback.dossierCommand?.callbackId) != nil {
-                self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.dossierCommand?.callbackId)
+            if (pluginCallback.dossierCallbackID) != nil {
+                self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.dossierCallbackID)
             }
         } else {
-            if (pluginCallback.checkCommand?.callbackId) != nil {
-                self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.checkCommand?.callbackId)
+            if (pluginCallback.checkCallbackID) != nil {
+                self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.checkCallbackID)
             }
         }
     }
 }
 
-private class PluginCallback {
-    var dossierCommand: CDVInvokedUrlCommand?
-    var checkCommand: CDVInvokedUrlCommand?
+class PluginCallback {
+    var dossierCallbackID: String?
+    var checkCallbackID: String?
     
     func resetCallbacks(){
-        dossierCommand = nil
-        checkCommand = nil
+        self.dossierCallbackID = nil
+        self.checkCallbackID = nil
     }
 }
 
