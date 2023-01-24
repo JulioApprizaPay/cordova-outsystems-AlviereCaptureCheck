@@ -20,13 +20,11 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Payments" spec="~> 0.9.19.0"/>
-                <pod name="AccountsSDK" spec="~> 0.9.19.0"/>
+                <pod name="Payments" spec="~> 0.9.20.0"/>
+                <pod name="AccountsSDK" spec="~> 0.9.20.0"/>
             </pods>
         </podspec>
         
-        <source-file src="src/ios/CaptureDosierDelegate.swift" />
-        <source-file src="src/ios/CaptureCheckDelegate.swift" />
         <source-file src="src/ios/AlviereCaptureCheck.swift" />
         <source-file src="src/ios/AppDelegateReplace.txt" />
         

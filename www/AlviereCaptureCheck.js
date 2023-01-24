@@ -5,7 +5,7 @@ exports.captureCheck = function (success, error) {
 };
 
 exports.captureDosier = function (docList,success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'captureDosier', [docList]);
+    exec(success, error, 'AlviereCaptureCheck', 'captureDossier', [docList]);
 };
 
 exports.requestPermission = function (success, error) {
@@ -20,7 +20,7 @@ exports.setCheckCallbacks = function (success, error) {
 };
 
 exports.setDosierCallbacks = function (success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'setDosierCallbacks', []);
+    exec(success, error, 'AlviereCaptureCheck', 'setDossierCallbacks', []);
 }
 
 exports.hideNavigationBar = function (success, error) {
