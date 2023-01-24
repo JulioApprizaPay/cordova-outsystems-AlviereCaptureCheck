@@ -194,7 +194,14 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
         } else if (pluginCallback.checkCallbackID) != nil {
                 self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.checkCallbackID)
         } else if (callbackType == .other) {
-            self.commandDelegate!.send(pluginResult, callbackId: callbackID)
+            if status == CDVCommandStatus_OK {
+                pluginResult = CDVPluginResult(status: status, messageAs: true)
+                self.commandDelegate!.send(pluginResult, callbackId: callbackID)
+            }
+            else if status == CDVCommandStatus_ERROR {
+                pluginResult = CDVPluginResult(status: status, messageAs: false)
+                self.commandDelegate!.send(pluginResult, callbackId: callbackID)
+            }
         }
     }
 }
