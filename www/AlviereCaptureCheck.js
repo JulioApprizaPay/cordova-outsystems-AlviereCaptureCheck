@@ -4,7 +4,7 @@ exports.captureCheck = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'captureCheck', []);
 };
 
-exports.captureDosier = function (docList,success, error) {
+exports.captureDossier = function (docList,success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'captureDossier', [docList]);
 };
 
@@ -19,7 +19,7 @@ exports.setCheckCallbacks = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'setCheckCallbacks', []);
 };
 
-exports.setDosierCallbacks = function (success, error) {
+exports.setDossierCallbacks = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'setDossierCallbacks', []);
 }
 
