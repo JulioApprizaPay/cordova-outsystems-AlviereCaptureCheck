@@ -75,7 +75,7 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
         let close = (viewController.view.subviews.first { $0 is UINavigationBar } as? UINavigationBar)?.topItem?.rightBarButtonItem
         self.closeAction = {
             viewController.dismiss()
-            self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "User cancalled", callbackType: .dossier)
+            self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "exit", callbackType: .dossier)
         }
         close?.target = self
         close?.action = #selector(self.closeOnClick)
@@ -91,6 +91,13 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     @objc(captureCheck:)
     func captureCheck(command: CDVInvokedUrlCommand) {
         let viewController = AlPayments.shared.createCaptureCheckDepositViewController(delegate: self, style: DepositCheckStyle.getDefaultStyle())
+        let close = (viewController.view.subviews.first { $0 is UINavigationBar } as? UINavigationBar)?.topItem?.rightBarButtonItem
+        self.closeAction = {
+            viewController.dismiss()
+            self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "exit", callbackType: .dossier)
+        }
+        close?.target = self
+        close?.action = #selector(self.closeOnClick)
         
         self.viewController.navigationController?.show(viewController, sender: self)
     }
