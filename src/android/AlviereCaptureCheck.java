@@ -52,7 +52,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
             captureCheckCallback = callbackContext;
             return true;
         }else if (action.equals("setDossierCallbacks")){
-            captureDossierCallback = callbackContext;
+            captureDosierCallback = callbackContext;
             return true;
         }else if (action.equals("captureCheck")) {
 
