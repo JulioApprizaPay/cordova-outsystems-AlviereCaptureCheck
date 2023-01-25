@@ -38,7 +38,6 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
 
     @objc(setDossierCallbacks:)
     func setDossierCallbacks(command: CDVInvokedUrlCommand) {
-        
         pluginCallback.resetCallbacks()
         pluginCallback.dossierCallbackID = command.callbackId
     }
@@ -167,7 +166,6 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
             sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Could not serialize docs Array to json", callbackType: .dossier)
         }
     }
-    
     
     //MARK: CheckDepositsCaptureDelegate
     func didCaptureCheck(frontImage: String, backImage: String) {
