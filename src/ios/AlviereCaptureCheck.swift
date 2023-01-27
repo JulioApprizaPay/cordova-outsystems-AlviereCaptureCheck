@@ -94,7 +94,7 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
         let close = (viewController.view.subviews.first { $0 is UINavigationBar } as? UINavigationBar)?.topItem?.rightBarButtonItem
         self.closeAction = {
             viewController.dismiss()
-            self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "exit", callbackType: .dossier)
+            self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "exit", callbackType: .check)
         }
         close?.target = self
         close?.action = #selector(self.closeOnClick)
@@ -196,8 +196,10 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
             if (pluginCallback.dossierCallbackID) != nil {
                 self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.dossierCallbackID)
             }
-        } else if (pluginCallback.checkCallbackID) != nil {
+        } else if callbackType == .check {
+            if (pluginCallback.checkCallbackID) != nil {
                 self.commandDelegate!.send(pluginResult, callbackId: pluginCallback.checkCallbackID)
+            }
         } else if (callbackType == .other) {
             if status == CDVCommandStatus_OK {
                 pluginResult = CDVPluginResult(status: status, messageAs: true)
