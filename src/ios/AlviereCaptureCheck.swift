@@ -44,11 +44,6 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
 
     @objc(captureDossier:)
     func captureDossier(command: CDVInvokedUrlCommand) {
-//        print("⭐️ \(command.arguments)")
-//        for argument in command.arguments {
-//            print("⭐️ \(argument)")
-//        }
-
         var documents: Array<String> = []
         let arguments = command.arguments[0] as! Array<String>
         for argument in arguments {
@@ -56,14 +51,9 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
         }
         let jsonData = try! JSONEncoder().encode(documents)
         let docsJSON = String(data: jsonData, encoding: .utf8)
-        
-//        let docsJSON = "[\"DRIVER_LICENSE_FRONT\", \"DRIVER_LICENSE_BACK\", \"SELFIE\"]"
-//        let docsJSON = command.argument(at:0) as! String;
-//        let docsJSON = command.arguments[0] as! String;
         let docsString = try? JSONSerialization.jsonObject(with: docsJSON!.data(using: .utf8, allowLossyConversion: false)!, options: .mutableContainers) as? Array<String>
         if(docsString == nil || docsString!.count == 0){
             sendPluginResult(status: CDVCommandStatus_ERROR, message: "Documents have not been specified!", callbackType: .dossier)
-            //commandDelegate.send(CDVPluginResult(status: .error, messageAs: "Documents have not been specified!"), callbackId: command.callbackId)
             return;
         }
         var docs = Array<Document>()
@@ -105,29 +95,22 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     @objc(checkPermission:)
     func checkPermission(command: CDVInvokedUrlCommand) {
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) ==  AVAuthorizationStatus.authorized {
-            // Already Authorized
             sendPluginResult(status: CDVCommandStatus_OK, message: "ok", callbackType: .other, callbackID: command.callbackId)
-            //commandDelegate.send(CDVPluginResult(status: .ok, messageAs: true), callbackId: command.callbackId)
         } else {
             sendPluginResult(status: CDVCommandStatus_ERROR, message: "false", callbackType: .other, callbackID: command.callbackId)
-            //commandDelegate.send(CDVPluginResult(status: .ok, messageAs: false), callbackId: command.callbackId)
         }
     }
     
     @objc(requestPermission:)
     func requestPermission(command: CDVInvokedUrlCommand) {
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) ==  AVAuthorizationStatus.authorized {
-            // Already Authorized
             sendPluginResult(status: CDVCommandStatus_OK, message: "ok", callbackType: .other, callbackID: command.callbackId)
-            //commandDelegate.send(CDVPluginResult(status: .ok, messageAs: true), callbackId: command.callbackId)
         } else {
             AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { (granted: Bool) -> Void in
                if granted == true {
                    self.sendPluginResult(status: CDVCommandStatus_OK, message: "ok", callbackType: .other, callbackID: command.callbackId)
-//                   self.commandDelegate.send(CDVPluginResult(status: .ok, messageAs: true), callbackId: command.callbackId)
                } else {
                    self.sendPluginResult(status: CDVCommandStatus_ERROR, message: "false", callbackType: .other, callbackID: command.callbackId)
-//                   self.commandDelegate.send(CDVPluginResult(status: .ok, messageAs: false), callbackId: command.callbackId)
                }
            })
         }
@@ -135,7 +118,6 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     
     func didHandleEvent(_ event: String, metadata: [String: String]?) {
         print("⭐️ Received event: \(event)\nmetadata: \(metadata ?? [:])")
-//            command.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: event), callbackId: dosierCallbackId)
         if pluginCallback.checkCallbackID != nil {
             sendPluginResult(status: CDVCommandStatus_ERROR, message: event, callbackType: .check)
         } else if pluginCallback.dossierCallbackID != nil {
@@ -144,13 +126,12 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
     }
     
 //    //MARK: AccountDossiersCaptureDelegate
-    func setDossierCallbacks(callbackid: String,command: CDVCommandDelegate) {
-        print("⭐️ setDosierCallbacks")
+//    func setDossierCallbacks(callbackid: String,command: CDVCommandDelegate) {
 //        pluginCallback.resetCallbacks()
 //        pluginCallback.dossierCallbackID = command
 //        self.dosierCallbackId = callbackid
 //        self.command = command
-    }
+//    }
     
     func didCaptureDocuments(_ documents: [Document]) {
         print("⭐️ Images Captured!")
@@ -161,10 +142,8 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
             docJSON["type"] = doc.type!.rawValue
             docs.append(docJSON)
         }
-//        command.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: docs), callbackId: dosierCallbackId)
         if let data = try? JSONSerialization.data(withJSONObject: docs, options: .prettyPrinted) {
             if let docsJson = String(data: data, encoding: String.Encoding.utf8) {
-                //        command.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: images), callbackId: checkCallbackId)
                 sendPluginResult(status: CDVCommandStatus_OK, message: docsJson, callbackType: .dossier)
             } else {
                 sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Could not create the json object from data", callbackType: .dossier)
@@ -179,8 +158,6 @@ class AlviereCaptureCheck: CDVPlugin, AccountDossiersCaptureDelegate, CheckDepos
         let images: [String] = [frontImage, backImage]
         if let data = try? JSONSerialization.data(withJSONObject: images, options: .prettyPrinted) {
             if let imagesJson = String(data: data, encoding: String.Encoding.utf8) {
-                //        command.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: images), callbackId: checkCallbackId)
-                print("⭐️ Images Captured!")
                 sendPluginResult(status: CDVCommandStatus_OK, message: imagesJson, callbackType: .check)
             } else {
                 sendPluginResult(status: CDVCommandStatus_ERROR, message: "Error: Could not create the json object from data", callbackType: .check)
