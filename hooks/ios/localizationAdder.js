@@ -182,9 +182,15 @@ module.exports = function (context) {
                 console.log('Pbx project written with localization groups', _.map(languages, 'lang'));
 
                 var platformPath = path.join(context.opts.projectRoot, 'platforms', 'ios');
-                var projectFileApi = require(path.join(platformPath, '/cordova/lib/projectFile.js'));
-                projectFileApi.purgeProjectFileCache(platformPath);
-
+                try {
+                    //try for cordova < 12
+                    var projectFileApi = require(path.join(platformPath, '/cordova/lib/projectFile.js'));
+                    projectFileApi.purgeProjectFileCache(platformPath);
+                } catch (e){
+                    //try for cordova >= 12
+                    var projectFileApi = require(path.join('cordova-ios', 'lib', 'projectFile'));
+                    projectFileApi.purgeProjectFileCache(platformPath);
+                }
                 resolve();
             });
         });
