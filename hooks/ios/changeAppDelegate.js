@@ -18,8 +18,12 @@ module.exports = function (context) {
     const appConfig = new ConfigParser(path.resolve(context.opts.projectRoot, "config.xml"));
 
     const appName = appConfig.name()
-
+    
     var appDelegatePath = path.join(constants.projectSrcPath,appName,"Classes","AppDelegate.m")
+    var fileExists = fs.existsSync(appDelegatePath);
+    if (!fileExists){
+        appDelegatePath = path.join(constants.projectSrcPath,appName,"AppDelegate.m")
+    }
     var appDelegateChangerPath = path.join(constants.projectSrcPath,appName,"Plugins",constants.pluginName,"AppDelegateReplace.txt")
 
     var replacingContent = fs.readFileSync(appDelegateChangerPath, "utf8");
