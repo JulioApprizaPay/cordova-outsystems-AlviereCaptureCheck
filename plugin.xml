@@ -18,10 +18,11 @@
         <podspec>
             <config>
                 <source url="https://cdn.cocoapods.org/"/>
+                <source url="https://github.com/JulioApprizaPay/ApprizaPayPodSpecs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Payments" spec="~> 0.9.25.0"/>
-                <pod name="AccountsSDK" spec="~> 0.9.25.0"/>
+                <pod name="PaymentsApprizaPay" spec="~> 0.9.20.0"/>
+                <pod name="AccountsApprizaPay" spec="~> 0.9.20.0"/>
             </pods>
         </podspec>
         
