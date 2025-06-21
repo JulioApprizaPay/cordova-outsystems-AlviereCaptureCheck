@@ -51,7 +51,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
         if (action.equals("setCheckCallbacks")){
             captureCheckCallback = callbackContext;
             return true;
-        }else if (action.equals("setDosierCallbacks")){
+        }else if (action.equals("setDossierCallbacks")){
             captureDosierCallback = callbackContext;
             return true;
         }else if (action.equals("captureCheck")) {
@@ -91,7 +91,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
             isAwaitingResponse = true;
             cordova.getActivity().startActivity(intent);
             return true;
-        }else if(action.equals("captureDosier")){
+        }else if(action.equals("captureDossier")){
 
             if(captureDosierCallback == null){
                 callback.error("Callbacks were not set!");

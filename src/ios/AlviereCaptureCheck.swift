@@ -72,8 +72,8 @@ class AlviereCaptureCheck: CDVPlugin {
         pluginCallback.dossierCallbackID = command.callbackId
     }
 
-    @objc(captureDosier:)
-    func captureDosier(command: CDVInvokedUrlCommand) {
+    @objc(captureDossier:)
+    func captureDossier(command: CDVInvokedUrlCommand) {
         guard let docTypes = command.arguments[0] as? [String],
               let accountUUID = command.arguments[1] as? String,
               let token = command.arguments[2] as? String,

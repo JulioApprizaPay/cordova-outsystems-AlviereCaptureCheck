@@ -4,8 +4,8 @@ exports.captureCheck = function (accountUUID, token, success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'captureCheck', [accountUUID, token]);
 };
 
-exports.captureDosier = function (accountUUID, docList, token,success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'captureDosier', [docList, accountUUID, token]);
+exports.captureDossier = function (accountUUID, docList, token,success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'captureDossier', [docList, accountUUID, token]);
 };
 
 exports.setEnvironment = function (environment, success, error) {
@@ -23,8 +23,8 @@ exports.setCheckCallbacks = function (success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'setCheckCallbacks', []);
 };
 
-exports.setDosierCallbacks = function (success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'setDosierCallbacks', []);
+exports.setDossierCallbacks = function (success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'setDossierCallbacks', []);
 }
 
 exports.hideNavigationBar = function (success, error) {
