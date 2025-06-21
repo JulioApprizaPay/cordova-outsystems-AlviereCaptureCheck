@@ -4,7 +4,7 @@ exports.captureCheck = function (accountUUID, token, success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'captureCheck', [accountUUID, token]);
 };
 
-exports.captureDossier = function (accountUUID, docList, token,success, error) {
+exports.captureDossier = function (docList, accountUUID, token,success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'captureDossier', [docList, accountUUID, token]);
 };
 
