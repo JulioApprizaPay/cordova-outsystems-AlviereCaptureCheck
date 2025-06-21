@@ -51,7 +51,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
         if (action.equals("setCheckCallbacks")){
             captureCheckCallback = callbackContext;
             return true;
-        }else if (action.equals("setDossierCallbacks")){
+        }else if (action.equals("setDosierCallbacks")){
             captureDosierCallback = callbackContext;
             return true;
         }else if (action.equals("captureCheck")) {
@@ -91,7 +91,7 @@ public class AlviereCaptureCheck extends CordovaPlugin {
             isAwaitingResponse = true;
             cordova.getActivity().startActivity(intent);
             return true;
-        }else if(action.equals("captureDossier")){
+        }else if(action.equals("captureDosier")){
 
             if(captureDosierCallback == null){
                 callback.error("Callbacks were not set!");
@@ -101,18 +101,10 @@ public class AlviereCaptureCheck extends CordovaPlugin {
                 callbackContext.error("Awaiting Capture Response!");
                 return false;
             }
-            //String docsJSON = args.getString(0);
-            //JSONArray docs = new JSONArray(docsJSON);
-            //if (docs == null || docs.length() == 0){
-            //    callbackContext.error("Documents not specified!");
-            //}
-            JSONObject payload = args.getJSONObject(0);
-            String accountUUID = payload.getString("accountUUID");
-            String token       = payload.getString("token");
-            JSONArray docs     = payload.getJSONArray("docTypes");
-            if (docs == null || docs.length() == 0) {
+            String docsJSON = args.getString(0);
+            JSONArray docs = new JSONArray(docsJSON);
+            if (docs == null || docs.length() == 0){
                 callbackContext.error("Documents not specified!");
-                return false;
             }
             isAwaitingResponse = true;
 
@@ -146,22 +138,11 @@ public class AlviereCaptureCheck extends CordovaPlugin {
             };
 
             AccountsSdk.INSTANCE.setEventListener(documentCaptureSdkCallback);
-            //DocumentTypeModel[] filesToCapture = new DocumentTypeModel[docs.length()];
-            //for (int i = 0; i < docs.length(); i++) {
-            //    filesToCapture[i] = DocumentTypeModel.valueOf(docs.getString(i));
-            //}
-            //Intent intent =  AccountsSdk.INSTANCE.documentCaptureByIntent(cordova.getActivity(),filesToCapture);
-            // convert JSON array of doc‐type strings into SDK enum values
             DocumentTypeModel[] filesToCapture = new DocumentTypeModel[docs.length()];
             for (int i = 0; i < docs.length(); i++) {
                 filesToCapture[i] = DocumentTypeModel.valueOf(docs.getString(i));
             }
-            // (If the SDK needs the accountUUID/token, set them here on AccountsSdk)
-            // e.g. AccountsSdk.INSTANCE.setAuth(accountUUID, token);
-            Intent intent = AccountsSdk.INSTANCE.documentCaptureByIntent(
-                                cordova.getActivity(),
-                                filesToCapture
-                           );
+            Intent intent =  AccountsSdk.INSTANCE.documentCaptureByIntent(cordova.getActivity(),filesToCapture);
             cordova.getActivity().startActivity(intent);
             return true;
         }else if (action.equals("checkPermission")) {

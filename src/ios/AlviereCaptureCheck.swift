@@ -72,12 +72,11 @@ class AlviereCaptureCheck: CDVPlugin {
         pluginCallback.dossierCallbackID = command.callbackId
     }
 
-    @objc(captureDossier:)
-    func captureDossier(command: CDVInvokedUrlCommand) {
-        guard let arguments = command.arguments.first as? [String: Any],
-              let accountUUID = arguments["accountUUID"] as? String,
-              let docTypes = arguments["docTypes"] as? [String],
-              let token = arguments["token"] as? String,
+    @objc(captureDosier:)
+    func captureDosier(command: CDVInvokedUrlCommand) {
+        guard let docTypes = command.arguments[0] as? [String],
+              let accountUUID = command.arguments[1] as? String,
+              let token = command.arguments[2] as? String,
               let cameraConfigRaw = docTypes.first else {
             sendPluginResult(status: .error, message: "Missing or invalid arguments", callbackType: .dossier)
             return
