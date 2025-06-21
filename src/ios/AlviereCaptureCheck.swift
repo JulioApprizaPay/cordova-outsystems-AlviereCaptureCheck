@@ -66,8 +66,8 @@ class AlviereCaptureCheck: CDVPlugin {
         pluginCallback.checkCallbackID = command.callbackId
     }
 
-    @objc(setDossierCallbacks:)
-    func setDossierCallbacks(command: CDVInvokedUrlCommand) {
+    @objc(setDosierCallbacks:)
+    func setDosierCallbacks(command: CDVInvokedUrlCommand) {
         pluginCallback.resetCallbacks()
         pluginCallback.dossierCallbackID = command.callbackId
     }
