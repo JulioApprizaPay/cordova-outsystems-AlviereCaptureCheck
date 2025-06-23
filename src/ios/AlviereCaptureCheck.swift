@@ -74,10 +74,9 @@ class AlviereCaptureCheck: CDVPlugin {
 
     @objc(captureDossier:)
     func captureDossier(command: CDVInvokedUrlCommand) {
-        guard let arguments = command.arguments.first as? [String: Any],
-              let accountUUID = arguments["accountUUID"] as? String,
-              let docTypes = arguments["docTypes"] as? [String],
-              let token = arguments["token"] as? String,
+        guard let docTypes = command.arguments[0] as? [String],
+              let accountUUID = command.arguments[1] as? String,
+              let token = command.arguments[2] as? String,
               let cameraConfigRaw = docTypes.first else {
             sendPluginResult(status: .error, message: "Missing or invalid arguments", callbackType: .dossier)
             return
@@ -238,10 +237,21 @@ class AlviereCaptureCheck: CDVPlugin {
                                 } else {
                                     let backImageBase64 = checkData.image
                                     self.viewController.dismiss(animated: true) { [weak self] in
-                                        guard let self = self, let callbackID = self.pluginCallback.checkCallbackID else { return }
-                                        let imagesArray = [frontImageBase64 ?? "", backImageBase64]
-                                        let pluginResult = CDVPluginResult(status: .ok, messageAs: imagesArray)
-                                        self.commandDelegate.send(pluginResult, callbackId: callbackID)
+                                        guard let self = self else { return }
+                                        let resultDict: [String: Any] = [
+                                            "frontImage": frontImageBase64 ?? "",
+                                            "backImage": backImageBase64
+                                        ]
+                                        if let jsonData = try? JSONSerialization.data(withJSONObject: resultDict, options: []),
+                                           let jsonString = String(data: jsonData, encoding: .utf8) {
+                                            self.sendPluginResult(status: .ok,
+                                                                  message: jsonString,
+                                                                  callbackType: .check)
+                                        } else {
+                                            self.sendPluginResult(status: .error,
+                                                                  message: "Failed to serialize check data",
+                                                                  callbackType: .check)
+                                        }
                                     }
                                 }
                             case .failure(let error):
