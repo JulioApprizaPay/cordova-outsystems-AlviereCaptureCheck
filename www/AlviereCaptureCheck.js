@@ -1,11 +1,20 @@
 var exec = require('cordova/exec');
 
-exports.captureCheck = function (success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'captureCheck', []);
+exports.captureCheck = function (accountUUID, token, success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'captureCheck', [accountUUID, token]);
 };
 
-exports.captureDossier = function (docList,success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'captureDossier', [docList]);
+exports.captureDossier = function (accountUUID, docTypes, token, success, error) {
+    const payload = {
+        accountUUID: accountUUID,
+        docTypes: docTypes,
+        token: token
+    };
+    exec(success, error, 'AlviereCaptureCheck', 'captureDossier', [payload]);
+};
+
+exports.setEnvironment = function (environment, success, error) {
+    exec(success, error, 'AlviereCaptureCheck', 'setEnvironment', [environment]);
 };
 
 exports.requestPermission = function (success, error) {
