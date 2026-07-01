@@ -4,8 +4,13 @@ exports.captureCheck = function (accountUUID, token, success, error) {
     exec(success, error, 'AlviereCaptureCheck', 'captureCheck', [accountUUID, token]);
 };
 
-exports.captureDossier = function (docList, accountUUID, token,success, error) {
-    exec(success, error, 'AlviereCaptureCheck', 'captureDossier', [docList, accountUUID, token]);
+exports.captureDossier = function (accountUUID, docTypes, token, success, error) {
+    const payload = {
+        accountUUID: accountUUID,
+        docTypes: docTypes,
+        token: token
+    };
+    exec(success, error, 'AlviereCaptureCheck', 'captureDossier', [payload]);
 };
 
 exports.setEnvironment = function (environment, success, error) {
